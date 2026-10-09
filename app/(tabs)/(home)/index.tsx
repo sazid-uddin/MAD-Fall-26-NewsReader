@@ -35,7 +35,7 @@ export default function ArticleList() {
                 contentContainerStyle={styles.list}
                 ListHeaderComponent={
                     <View style={styles.listHeader}>
-                        <ScrollView horizontal>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             <TouchableOpacity style={[styles.pill, selectedCategory === "All" && styles.selectedPill]} onPress={() => handleCategoryPress("All")}>
                                 <Text style={[selectedCategory === "All" && styles.selectedPillText]}>All</Text>
                             </TouchableOpacity>
@@ -45,7 +45,9 @@ export default function ArticleList() {
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
-                        <Text style={styles.listHeaderText}>{filteredArticles.length} stories</Text>
+                        <Text style={styles.listHeaderText}>
+                            {filteredArticles.length} stories {selectedCategory != "All" ? " - in " + selectedCategory : ""}
+                        </Text>
                     </View>
                 }
             />
@@ -57,7 +59,13 @@ const styles = StyleSheet.create({
     screen: { flex: 1, backgroundColor: "#F0F4F8" },
     list: { paddingTop: 12, paddingBottom: 32 },
     listHeader: { paddingHorizontal: 16, paddingBottom: 8 },
-    listHeaderText: { fontSize: 12, color: "#94A3B8", textTransform: "uppercase", letterSpacing: 1 },
+    listHeaderText: {
+        fontSize: 12,
+        color: "#94A3B8",
+        textTransform: "uppercase",
+        letterSpacing: 1,
+        paddingTop: 8,
+    },
     pill: {
         backgroundColor: "#E2E8F0",
         paddingHorizontal: 16,
