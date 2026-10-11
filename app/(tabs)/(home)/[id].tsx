@@ -1,9 +1,11 @@
 // app/(tabs)/(home)/[id].tsx
 
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ARTICLES } from "../../../data/articles";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type ArticleParams = { id: string };
 
@@ -23,6 +25,8 @@ export default function ArticleDetail() {
 
     const article = ARTICLES.find((a) => a.id === id);
 
+	const [bookmarked, setBookmarked] = useState<boolean>(false);
+
     // Update the Stack header title once we have the article
     useEffect(() => {
         if (article) {
@@ -41,7 +45,7 @@ export default function ArticleDetail() {
     const colour = CATEGORY_COLOURS[article.category] ?? DEFAULT_COLOUR;
 
     return (
-        <ScrollView style={styles.screen}>
+        <SafeAreaView style={styles.screen}>
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={[styles.badge, { backgroundColor: colour.bg }]}>
                     <Text style={[styles.badgeText, { color: colour.text }]}>{article.category}</Text>
@@ -58,7 +62,10 @@ export default function ArticleDetail() {
                     </Text>
                 ))}
             </ScrollView>
-        </ScrollView>
+            <TouchableOpacity style={[bookmarked && styles.bookmarkedButton, styles.bookmarkButton]} onPress={() => setBookmarked(!bookmarked)}>
+				<Ionicons name={bookmarked ? "bookmark" : "bookmark-outline"} size={24} color={"white"}></Ionicons>
+			</TouchableOpacity>
+        </SafeAreaView>
     );
 }
 
@@ -74,4 +81,23 @@ const styles = StyleSheet.create({
     divider: { height: 1, backgroundColor: "#F1F5F9", marginBottom: 20 },
     body: { fontSize: 15, color: "#334155", lineHeight: 24, marginBottom: 16 },
     notFound: { padding: 40, textAlign: "center", color: "#94A3B8" },
+    bookmarkButton: {
+        position: "absolute",
+        width: 56,
+        height: 56,
+        alignItems: "center",
+        justifyContent: "center",
+        right: 20,
+        bottom: 20,
+        backgroundColor: "#0D1F4E",
+        borderRadius: 30,
+        elevation: 8, // Shadows for Android
+        shadowColor: "#000", // Shadows for iOS
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+    },
+	bookmarkedButton: {
+		backgroundColor: "#1D4ED8",
+	},
 });
